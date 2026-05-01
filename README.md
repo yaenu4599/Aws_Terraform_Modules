@@ -1,25 +1,20 @@
 # Aws_Terraform_Modules
 Reusable Terraform local modules for AWS infrastructure. Made to be able to add modules easly and to export them for any use.
 
-## Version
+## modules available 
 
-| Name | Version |
-|------|---------|
-|Terraform| 1.15.0 |
-| Aws | 6.0 |
-
-## Modules Available 
-
-|Modules | Folder | Description |
+|modules | folder | description |
 |--------|--------|-------------|
-| [vpc][modules/vpc] | [./module/vpc][./module/vpc] | Vpc, Igw, Nat, Subnets, Route tables |
-| [Security Groups][modules/security_groups] |[./module/security_groups][./module/security_groups] | A Public and Private Security Group |
+| [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
+| [security groups](module/security_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
 
 ## modules/vpc
 
-Creates a full vpc setup with public and private subnets on multible azs.
+Creates a full vpc setup with public and private subnets across multiple azs. 
 
-### Usage
+For each az defined in var.azs, one public and one private subnet will be created. Each private subnet gets its own nat gateway (deployed in the corresponding public subnet) and an associated route table that routes outbound traffic through it.
+
+### usage
 
 ```hcl
 module "vpc" {                            
@@ -38,26 +33,76 @@ module "vpc" {
 environment = "dev" 
 vpc_cidr             = "10.0.0.0/16"
 azs                  = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
-subnet_public_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+
+# subnet_public_cidrs and subnet_private_cidrs must have the same number of entries as azs
+subnet_public_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"] 
+subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"] 
 ```
 
-### Inputs
+### inputs
 
-| Name | Type | Description |
+| name | type | description |
 |------|------|-------------|
-| environment | string | Variable used for tagging | 
-| vpc_cidr | string | Cidr to create a vpc |
-| azs | list(string) | A list of azs to deploy in |
-| private_subnets_cidr | list(string) | Cidr blocks to creat public subnets |
-| public_subnets_cidr | list(string) | Cidr blocks to public subnets |
+| environment | `string` | variable used for tagging | 
+| vpc_cidr | `string` | cidr to create a vpc |
+| azs | `list(string)` | a list of azs to deploy in |
+| private_subnets_cidr | `list(string)` | cidr blocks to creat public subnets |
+| public_subnets_cidr | `list(string)` | cidr blocks to public subnets |
 
-### Outputs
+### outputs
 
-| Name | Description |
+| name | description |
 |------|-------------|
-| vpc_id | Vpc id to use in the root module or and in other modules |
-| subnets_public_ids | The ids of the public subnets in the vpc, in a list |
-| subnets_private_ids | The ids of the private subnets in the vpc, in a list |
+| vpc_id | vpc id to use in the root module or and in other modules |
+| subnets_public_ids | the ids of the public subnets in the vpc, in a list |
+| subnets_private_ids | the ids of the private subnets in the vpc, in a list |
 
 ## modules/security_groups
+
+Creates a public and private security group. 
+
+The public security group is for instances in the public subnets and allows http(80), https(443) and optionally ssh(22) when var.allow_ssh has one or more cidr_blocks defined.
+
+The private security group is for instances in the private subnets and also allows http(80) and https(443) but both can only be accessed through a instance or Load balancer that uses the public security group.
+
+### Requirement Modules 
+
+|modules | folder | description | 
+|--------|--------|-------------|
+| [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc id is needed |
+
+### Usage
+
+```hcl
+module "security_groups" {
+  source      = "./modules/security_groups"
+  environment = var.environment
+  vpc_id      = module.vpc.vpc_id
+  allow_ssh   = var.ssh_allowed_cidrs
+}
+```
+
+### terraform.tfvars example
+
+```hcl
+# =============================================================================
+# module.security_groups
+# =============================================================================
+
+ssh_allowed_cidrs = []
+```
+
+### inputs
+
+| name | type | description |
+|------|------|-------------|
+| environment | `string` | variable used for tagging | 
+| vpc_id | `string` | to define in wich vpc the security groups should be made |
+| ssh_allowed_cidrs | `set(string)` | makes it easy to allow certain cidr blocks to be used for ssh and can be left empty |
+
+### outputs
+
+| name | description |
+|------|-------------|
+| security_group_public_id | used to creat public instances |
+| security_group_private_id | used to creat private instances |

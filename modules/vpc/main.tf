@@ -1,11 +1,11 @@
 # =============================================================================
-# VPC
+# vpc
 # =============================================================================
 
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
 
-  # DNS support, always useful and good to have enabled 
+  # dns support, always useful and good to have enabled 
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -18,7 +18,7 @@ resource "aws_vpc" "main" {
 }
 
 # =============================================================================
-# Internet Gateway
+# internet gateway
 # =============================================================================
 
 resource "aws_internet_gateway" "main" {
@@ -32,7 +32,7 @@ resource "aws_internet_gateway" "main" {
 }
 
 # =============================================================================
-# Nat Gateway
+# nat gateway
 # =============================================================================
 
 resource "aws_eip" "nat" {
@@ -58,7 +58,7 @@ resource "aws_nat_gateway" "main" {
     }
   )
 
-  # A nat gateway still needs a internet gateway to function but it does not reference it.
+  # a nat gateway still needs a internet gateway to function but it does not reference it.
   # Whit this we add a dependency so we are sure that the internet gaway exisits before the nat gateway is created.
   depends_on = [aws_internet_gateway.main]
 
@@ -66,11 +66,11 @@ resource "aws_nat_gateway" "main" {
 
 
 # =============================================================================
-# Subnets
+# subnets
 # =============================================================================
 
 resource "aws_subnet" "public" {
-  count             = length(var.azs) # The current count is 3 because 3 azs are in the variable. 
+  count             = length(var.azs) # the current count is 3 because 3 azs are in the variable. 
   vpc_id            = aws_vpc.main.id
   availability_zone = var.azs[count.index]
   cidr_block        = var.subnet_public_cidrs[count.index]
@@ -83,7 +83,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "private" {
-  count             = length(var.azs) # The current count is 3 because 3 az are in the variable
+  count             = length(var.azs) # the current count is 3 because 3 az are in the variable
   vpc_id            = aws_vpc.main.id
   availability_zone = var.azs[count.index]
   cidr_block        = var.subnet_private_cidrs[count.index]
@@ -97,7 +97,7 @@ resource "aws_subnet" "private" {
 
 
 # =============================================================================
-# Routing Tables
+# routing tables
 # =============================================================================
 
 resource "aws_route_table" "public" {
@@ -132,7 +132,7 @@ resource "aws_route_table" "private" {
 }
 
 # =============================================================================
-# Routing Association
+# routing association
 # =============================================================================
 
 resource "aws_route_table_association" "public" {

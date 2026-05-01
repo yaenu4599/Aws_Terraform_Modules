@@ -3,7 +3,7 @@
 # =============================================================================
 
 variable "environment" {
-  description = "Root passed value for tagging"
+  description = "root passed value for tagging"
   type        = string
 }
 
@@ -13,21 +13,21 @@ variable "environment" {
 # =============================================================================
 
 variable "vpc_cidr" {
-  description = "Root passed cidr"
+  description = "root passed cidr"
   type        = string
 }
 
 variable "azs" {
-  description = "Az list passed form the root module"
+  description = "az list passed form the root module"
   type        = list(string)
 }
 
 variable "subnet_public_cidrs" {
-  description = "List of cidrs passed form the root module"
+  description = "list of cidrs passed form the root module"
   type        = list(string)
 }
 
 variable "subnet_private_cidrs" {
-  description = "List of cidrs passed form the root module"
+  description = "list of cidrs passed form the root module"
   type        = list(string)
 }
