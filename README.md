@@ -1,11 +1,18 @@
 # Aws_Terraform_Modules
 Reusable Terraform local modules for AWS infrastructure. Made to be able to add modules easly and to export them for any use.
 
+## Version
+
+| Name | Version |
+|------|---------|
+|Terraform| 1.15.0 |
+| Aws | 6.0 |
+
 ## Modules Available 
 
 |Modules | Description |
 |--------|-------------|
-|vpc(./modules/vpc) | Vpc, Igw, Nat, Subnets, Route tables |
+|[vpc](./modules/vpc) | Vpc, Igw, Nat, Subnets, Route tables |
 
 ## modules/vpc
 
