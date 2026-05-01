@@ -12,7 +12,7 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 
 |Modules | Description |
 |--------|-------------|
-|[vpc](./modules/vpc) | Vpc, Igw, Nat, Subnets, Route tables |
+|[vpc][modules/vpc] | Vpc, Igw, Nat, Subnets, Route tables |
 
 ## modules/vpc
 
@@ -58,3 +58,5 @@ subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 | vpc_id | Vpc id to use in the root module or and in other modules |
 | subnets_public_ids | The ids of the public subnets in the vpc, in a list |
 | subnets_private_ids | The ids of the private subnets in the vpc, in a list |
+
+[def]: ./modules/vpc
