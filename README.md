@@ -6,7 +6,7 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 |modules | folder | description |
 |--------|--------|-------------|
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
-| [security groups](module/security_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
+| [security groups](#modulessecurity_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
 
 ## modules/vpc
 
