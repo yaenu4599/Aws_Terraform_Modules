@@ -65,13 +65,13 @@ The public security group is for instances in the public subnets and allows http
 
 The private security group is for instances in the private subnets and also allows http(80) and https(443) but both can only be accessed through a instance or Load balancer that uses the public security group.
 
-### Requirement Modules 
+### required modules 
 
 |modules | folder | description | 
 |--------|--------|-------------|
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc id is needed |
 
-### Usage
+### usage
 
 ```hcl
 module "security_groups" {
