@@ -8,6 +8,25 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
 | [security groups](#modulessecurity_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
 
+## verison 
+
+| provider | version | 
+|--------|--------|
+| terraform | 1.15.0 | 
+| aws | 6.0 |
+
+## base terraform.tfvars elements
+
+One or more variables that get used by multiple modules that are not specific to one.
+
+```hcl
+# =============================================================================
+# tag
+# =============================================================================
+
+environment = "dev"
+```
+
 ## modules/vpc
 
 Creates a full vpc setup with public and private subnets across multiple azs. 
@@ -30,12 +49,6 @@ module "vpc" {
 ### terraform.tfvars example
 
 ```hcl
-# =============================================================================
-# tag
-# =============================================================================
-
-environment = "dev"
-
 # =============================================================================
 # modules.vpc
 # =============================================================================
