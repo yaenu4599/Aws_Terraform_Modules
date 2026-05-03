@@ -8,12 +8,10 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
 | [security groups](#modulessecurity_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
 
-## verison 
+## version 
 
-| provider | version | 
-|--------|--------|
-| terraform | 1.15.0 | 
-| aws | 6.0 |
+| terraform | ~> 1.15.0 |
+| aws provider | ~> 6.0 |
 
 ## base terraform.tfvars elements
 
