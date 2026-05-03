@@ -11,6 +11,7 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 ## version 
 
 | terraform | ~> 1.15.0 |
+|-----------|-----------|
 | aws provider | ~> 6.0 |
 
 ## base terraform.tfvars elements
