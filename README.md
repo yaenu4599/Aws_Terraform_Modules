@@ -30,13 +30,22 @@ module "vpc" {
 ### terraform.tfvars example
 
 ```hcl
-environment = "dev" 
-vpc_cidr             = "10.0.0.0/16"
-azs                  = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
+# =============================================================================
+# tag
+# =============================================================================
+
+environment = "dev"
+
+# =============================================================================
+# modules.vpc
+# =============================================================================
+
+vpc_cidr = "10.0.0.0/16"
+azs      = ["eu-central-1a", "eu-central-1b", "eu-central-1c"]
 
 # subnet_public_cidrs and subnet_private_cidrs must have the same number of entries as azs
-subnet_public_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"] 
-subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"] 
+subnet_public_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 ```
 
 ### inputs
