@@ -2,15 +2,21 @@
 # tags
 # =============================================================================
 
-variable "environment" {
-  description = "root passed value for tagging"
-  type        = string
+variable "common_tags" {
+  description = "variable for correct tagging and allowing the use of the permissions given"
+  type = map(string)
 }
 
+variable "environment" {
+  description = "root value for tagging"
+  type        = string
+  default = "dev"
+}
 
 # =============================================================================
-# vpc
+# input
 # =============================================================================
+
 
 variable "vpc_cidr" {
   description = "root passed cidr"

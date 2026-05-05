@@ -10,13 +10,22 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 
 ## version 
 
+| provider  | version |
+|-----------|---------|
 | terraform | ~> 1.15.0 |
-|-----------|-----------|
-| aws provider | ~> 6.0 |
+| aws  | ~> 6.0 |
 
-## base terraform.tfvars elements
+###  base permissions
 
-One or more variables that get used by multiple modules that are not specific to one.
+Attache this policy [./docs/permissions/TerraformBasicPermissions.json](./docs/permissions/TerraformBasicPermissions.json) to your terraform iam user.
+
+> **Note:** The policy uses `ManagedBy = "terraform"` as a resource tag condition.
+> All resources created by this module must include this tag in `common_tags`, 
+> or update the condition value in the policy to match your tagging convention.
+
+###  base terraform.tfvars elements
+
+
 
 ```hcl
 # =============================================================================
@@ -24,6 +33,7 @@ One or more variables that get used by multiple modules that are not specific to
 # =============================================================================
 
 environment = "dev"
+managedby   = "terraform"
 ```
 
 ## modules/vpc
@@ -36,7 +46,8 @@ For each az defined in var.azs, one public and one private subnet will be create
 
 ```hcl
 module "vpc" {                            
-  source               = "./modules/vpc"          
+  source               = "./modules/vpc" 
+  common_tags          = local.common_tags         
   environment          = var.environment         
   vpc_cidr             = var.vpc_cidr             
   azs                  = var.azs                  
@@ -44,6 +55,11 @@ module "vpc" {
   subnet_private_cidrs = var.subnet_private_cidrs 
 }
 ```
+###  required permissions
+
+To use this module attache this policy [./docs/permissions/TerraformModuleVpc.json](./docs/permissions/TerraformModuleVpc.json) to your terraform iam user.
+
+> **Note:** mMke sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work.
 
 ### terraform.tfvars example
 
@@ -64,6 +80,7 @@ subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 
 | name | type | description |
 |------|------|-------------|
+| local.common_tags | `map(string)` | has keypears environment and managedby, ist used for tagging | 
 | environment | `string` | variable used for tagging | 
 | vpc_cidr | `string` | cidr to create a vpc |
 | azs | `list(string)` | a list of azs to deploy in |
@@ -97,11 +114,18 @@ The private security group is for instances in the private subnets and also allo
 ```hcl
 module "security_groups" {
   source      = "./modules/security_groups"
+  common_tags = local.common_tags
   environment = var.environment
   vpc_id      = module.vpc.vpc_id
   allow_ssh   = var.ssh_allowed_cidrs
 }
 ```
+
+###  required permissions
+
+To use this module attache this policy [./docs/permissions/TerraformModuleSg.json](./docs/permissions/TerraformModuleSg.json) to your terraform iam user.
+
+> **Note:** mMke sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work.
 
 ### terraform.tfvars example
 
@@ -117,6 +141,7 @@ ssh_allowed_cidrs = []
 
 | name | type | description |
 |------|------|-------------|
+| local.common_tags | `map(string)` | has keypears environment and managedby, ist used for tagging | 
 | environment | `string` | variable used for tagging | 
 | vpc_id | `string` | to define in wich vpc the security groups should be made |
 | ssh_allowed_cidrs | `set(string)` | makes it easy to allow certain cidr blocks to be used for ssh and can be left empty |

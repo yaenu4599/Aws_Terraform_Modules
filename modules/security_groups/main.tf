@@ -7,7 +7,7 @@ resource "aws_security_group" "public" {
   description = "Security group for instances in public subnets"
   vpc_id      = var.vpc_id
 
-  tags = merge(
+  tags = merge( var.common_tags,
     {
       Name = "${var.environment}-public-sg"
     }
@@ -57,7 +57,7 @@ resource "aws_security_group" "private" {
   description = "Security group for instances in private subnets"
   vpc_id      = var.vpc_id
 
-  tags = merge(
+  tags = merge( var.common_tags,
     {
       Name = "${var.environment}-private-sg"
     }

@@ -1,7 +1,17 @@
+# =============================================================================
+# tags
+# =============================================================================
+
 variable "environment" {
   description = "Variable used for tagging"
   type        = string
   default     = "dev"
+}
+
+variable "mangedby" {
+  description = "root value for tagging"
+  type        = string
+  default     = "terraform"
 }
 
 # =============================================================================
