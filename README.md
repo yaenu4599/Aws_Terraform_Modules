@@ -1,6 +1,7 @@
 # Aws_Terraform_Modules
 Reusable Terraform local modules for AWS infrastructure. Made to be able to add modules easly and to export them for any use.
 
+
 ## modules available 
 
 |modules | folder | description |
@@ -8,12 +9,14 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
 | [security groups](#modulessecurity_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
 
-## version 
+
+### version 
 
 | provider  | version |
 |-----------|---------|
 | terraform | ~> 1.15.0 |
 | aws  | ~> 6.0 |
+
 
 ###  base permissions
 
@@ -22,10 +25,10 @@ Attache this policy [./docs/permissions/TerraformBasicPermissions.json](./docs/p
 > **Note:** The policy uses `ManagedBy = "terraform"` as a resource tag condition.
 > All resources created by this module must include this tag in `common_tags`, 
 > or update the condition value in the policy to match your tagging convention.
+> 
+
 
 ###  base terraform.tfvars elements
-
-
 
 ```hcl
 # =============================================================================
@@ -42,6 +45,7 @@ Creates a full vpc setup with public and private subnets across multiple azs.
 
 For each az defined in var.azs, one public and one private subnet will be created. Each private subnet gets its own nat gateway (deployed in the corresponding public subnet) and an associated route table that routes outbound traffic through it.
 
+
 ### usage
 
 ```hcl
@@ -55,11 +59,14 @@ module "vpc" {
   subnet_private_cidrs = var.subnet_private_cidrs 
 }
 ```
+
+
 ###  required permissions
 
 To use this module attache this policy [./docs/permissions/TerraformModuleVpc.json](./docs/permissions/TerraformModuleVpc.json) to your terraform iam user.
 
 > **Note:** mMke sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work.
+
 
 ### terraform.tfvars example
 
@@ -76,6 +83,7 @@ subnet_public_cidrs  = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
 subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 ```
 
+
 ### inputs
 
 | name | type | description |
@@ -87,6 +95,7 @@ subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 | private_subnets_cidr | `list(string)` | cidr blocks to creat public subnets |
 | public_subnets_cidr | `list(string)` | cidr blocks to public subnets |
 
+
 ### outputs
 
 | name | description |
@@ -94,6 +103,7 @@ subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 | vpc_id | vpc id to use in the root module or and in other modules |
 | subnets_public_ids | the ids of the public subnets in the vpc, in a list |
 | subnets_private_ids | the ids of the private subnets in the vpc, in a list |
+
 
 ## modules/security_groups
 
@@ -103,11 +113,13 @@ The public security group is for instances in the public subnets and allows http
 
 The private security group is for instances in the private subnets and also allows http(80) and https(443) but both can only be accessed through a instance or Load balancer that uses the public security group.
 
+
 ### required modules 
 
 |modules | folder | description | 
 |--------|--------|-------------|
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc id is needed |
+
 
 ### usage
 
@@ -121,11 +133,13 @@ module "security_groups" {
 }
 ```
 
+
 ###  required permissions
 
 To use this module attache this policy [./docs/permissions/TerraformModuleSg.json](./docs/permissions/TerraformModuleSg.json) to your terraform iam user.
 
 > **Note:** mMke sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work.
+
 
 ### terraform.tfvars example
 
@@ -137,6 +151,7 @@ To use this module attache this policy [./docs/permissions/TerraformModuleSg.jso
 ssh_allowed_cidrs = []
 ```
 
+
 ### inputs
 
 | name | type | description |
@@ -145,6 +160,7 @@ ssh_allowed_cidrs = []
 | environment | `string` | variable used for tagging | 
 | vpc_id | `string` | to define in wich vpc the security groups should be made |
 | ssh_allowed_cidrs | `set(string)` | makes it easy to allow certain cidr blocks to be used for ssh and can be left empty |
+
 
 ### outputs
 
