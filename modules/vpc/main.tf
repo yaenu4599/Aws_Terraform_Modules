@@ -9,8 +9,8 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
-  tags = merge( var.common_tags,
-    { 
+  tags = merge(var.common_tags,
+    {
       Name = "${var.environment}-main-VPC"
     }
   )
@@ -23,7 +23,7 @@ resource "aws_vpc" "main" {
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
-  tags = merge( var.common_tags,
+  tags = merge(var.common_tags,
     {
       Name = "${var.environment}-main-igw"
     }
@@ -38,7 +38,7 @@ resource "aws_eip" "nat" {
   domain = "vpc"
   count  = length(var.azs)
 
-  tags = merge( var.common_tags,
+  tags = merge(var.common_tags,
     {
       Name = "${var.environment}-nat-eip-${var.azs[count.index]}"
     }
@@ -51,7 +51,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id         = aws_subnet.public[count.index].id
   connectivity_type = "public"
 
-  tags = merge( var.common_tags,
+  tags = merge(var.common_tags,
     {
       Name = "${var.environment}-nat-${var.azs[count.index]}"
     }
@@ -74,7 +74,7 @@ resource "aws_subnet" "public" {
   availability_zone = var.azs[count.index]
   cidr_block        = var.subnet_public_cidrs[count.index]
 
-  tags = merge( var.common_tags,
+  tags = merge(var.common_tags,
     {
       Name = "${var.environment}-public-subnet-${var.azs[count.index]}"
     }
@@ -87,7 +87,7 @@ resource "aws_subnet" "private" {
   availability_zone = var.azs[count.index]
   cidr_block        = var.subnet_private_cidrs[count.index]
 
-  tags = merge( var.common_tags,
+  tags = merge(var.common_tags,
     {
       Name = "${var.environment}-private-subnet-${var.azs[count.index]}"
     }
@@ -107,7 +107,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.main.id
   }
 
-  tags = merge( var.common_tags,
+  tags = merge(var.common_tags,
     {
       Name = "${var.environment}-route_table-public"
     }
@@ -123,7 +123,7 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.main[count.index].id
   }
 
-  tags = merge( var.common_tags,
+  tags = merge(var.common_tags,
     {
       Name = "${var.environment}-route_table-private-${var.azs[count.index]}"
     }

@@ -2,7 +2,7 @@
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "BasicCreate",
+            "Sid": "BasePermissionsCreate",
             "Effect": "Allow",
             "Action": [
                 "ec2:CreateTags"
@@ -15,7 +15,7 @@
             }
         },
         {
-            "Sid": "BasicDelete",
+            "Sid": "BasePermissionsDelete",
             "Effect": "Allow",
             "Action": [
                 "ec2:DeleteTags"
@@ -26,6 +26,14 @@
                     "aws:ResourceTag/ManagedBy": "terraform"
                 }
             }
+        },
+        {
+            "Sid": "BasePermissionsDescribe",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:DescribeTags"
+            ],
+            "Resource": "*"
         }
     ]
 }

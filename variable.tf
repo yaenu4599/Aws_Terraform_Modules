@@ -19,13 +19,13 @@ variable "mangedby" {
 # =============================================================================
 
 variable "vpc_cidr" {
-  description = "Cidr to create a vpc"
+  description = "cidr to create a vpc"
   type        = string
   default     = "10.0.0.0/16"
 }
 
 variable "azs" {
-  description = "A list of azs to deploy in"
+  description = "a list of azs to deploy in"
   type        = list(string)
   default     = ["eu-central-1a", "eu-central-1b", "eu-central-1c"] # <-- each az gets a public and private subnet
 }
@@ -33,13 +33,13 @@ variable "azs" {
 # subnet_public_cidrs and subnet_private_cidrs must have the same number of entries as azs
 
 variable "subnet_public_cidrs" {
-  description = "Cidr blocks to creat public subnets" # 
+  description = "cidr blocks to creat public subnets" # 
   type        = list(string)
   default     = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"] # 
 }
 
 variable "subnet_private_cidrs" {
-  description = "Cidr blocks to creat private subnets"
+  description = "cidr blocks to creat private subnets"
   type        = list(string)
   default     = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"] # 
 }
@@ -49,7 +49,30 @@ variable "subnet_private_cidrs" {
 # =============================================================================
 
 variable "ssh_allowed_cidrs" {
-  description = "Cidr blocks allowed for ssh"
+  description = "cidr blocks allowed for ssh"
   type        = set(string)
   default     = [] # <-- add cidr blocks or leave empty to disable ssh
+}
+
+# =============================================================================
+# module.ec2instance
+# =============================================================================
+
+/*
+variable "public_key" {
+  description = "public key for ssh"
+  type = string
+}
+*/
+
+variable "instance_type" {
+  description = "instance type to create a instance"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "ami_id" {
+  description = "ami id to create a instance"
+  type        = string
+  default     = "ami-08bdb1495db49a7f9"
 }

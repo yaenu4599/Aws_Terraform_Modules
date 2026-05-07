@@ -20,11 +20,10 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 
 ###  base permissions
 
-Attache this policy [./docs/permissions/TerraformBasicPermissions.json](./docs/permissions/TerraformBasicPermissions.json) to your terraform iam user.
+Attache this policy [./docs/general/TerraformBasicPermissions.json](./docs/general/TerraformBasicPermissions.json) to your terraform iam user.
 
-> **Note:** The policy uses `ManagedBy = "terraform"` as a resource tag condition.
-> All resources created by this module must include this tag in `common_tags`, 
-> or update the condition value in the policy to match your tagging convention.
+> **Note:** The policy uses `ManagedBy = "terraform"` as a resource tag condition
+> All resources created by this module must include this tag in `common_tags`, or update the condition value in the policy to match your tagging convention
 > 
 
 
@@ -61,12 +60,21 @@ module "vpc" {
 ```
 
 
-###  required permissions
+###  requirement
 
-To use this module attache this policy [./docs/permissions/TerraformModuleVpc.json](./docs/permissions/TerraformModuleVpc.json) to your terraform iam user.
+#### modules
 
-> **Note:** mMke sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work.
+none
 
+#### permissions
+
+To use this module attache this policy [./docs/module_vpc/TerraformModuleVpc.json](./docs/module_vpc/TerraformModuleVpc.json) to your terraform iam user.
+
+> **Note:** make sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work
+
+#### other
+
+none
 
 ### terraform.tfvars example
 
@@ -92,8 +100,8 @@ subnet_private_cidrs = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
 | environment | `string` | variable used for tagging | 
 | vpc_cidr | `string` | cidr to create a vpc |
 | azs | `list(string)` | a list of azs to deploy in |
-| private_subnets_cidr | `list(string)` | cidr blocks to creat public subnets |
-| public_subnets_cidr | `list(string)` | cidr blocks to public subnets |
+| subnet_public_cidrs | `list(string)` | cidr blocks to create public subnets |
+| subnet_private_cidrs | `list(string)` | cidr blocks to create private subnets |
 
 
 ### outputs
@@ -113,14 +121,6 @@ The public security group is for instances in the public subnets and allows http
 
 The private security group is for instances in the private subnets and also allows http(80) and https(443) but both can only be accessed through a instance or Load balancer that uses the public security group.
 
-
-### required modules 
-
-|modules | folder | description | 
-|--------|--------|-------------|
-| [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc id is needed |
-
-
 ### usage
 
 ```hcl
@@ -134,12 +134,24 @@ module "security_groups" {
 ```
 
 
-###  required permissions
+###  requirement
 
-To use this module attache this policy [./docs/permissions/TerraformModuleSg.json](./docs/permissions/TerraformModuleSg.json) to your terraform iam user.
+#### modules
 
-> **Note:** mMke sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work.
+|modules | folder | description | 
+|--------|--------|-------------|
+| [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc to launche the security groups in |
 
+
+#### permissions
+
+To use this module attache this policy [./docs/module_security_groups/TerraformModuleSg.json](./docs/module_security_groups/TerraformModuleSg.json) to your terraform iam user.
+
+> **Note:** make sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work
+
+#### others
+
+none
 
 ### terraform.tfvars example
 
@@ -168,3 +180,99 @@ ssh_allowed_cidrs = []
 |------|-------------|
 | security_group_public_id | used to creat public instances |
 | security_group_private_id | used to creat private instances |
+
+
+## modules/ec2instance
+
+module to create a instance in a private subnet and private security group
+
+### usage
+
+```hcl
+module "ec2instance" {
+  source                    = "./modules/ec2instance"
+  common_tags               = local.common_tags
+  environment               = var.environment
+  # public_key              = var.public_key
+  instance_type             = var.instance_type
+  ami_id                    = var.ami_id
+  subnets_public_ids        = module.vpc.subnets_public_ids
+  subnets_private_ids       = module.vpc.subnets_private_ids
+  security_group_public_id  = module.security_groups.security_group_public_id
+  security_group_private_id = module.security_groups.security_group_private_id
+}
+```
+
+###  requirement
+
+#### modules
+
+|modules | folder | description | 
+|--------|--------|-------------|
+| [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc to launche the security groups in |
+| [security groups](#modulessecurity_groups) | [./modules/security_groups](./modules/security_groups) | private security group to launch the instance in |
+
+#### permissions
+
+To use this module attache this policy [./docs/module_ec2instance/TerraformModuleEc2Instance.json](./docs/module_ec2instance/TerraformModuleEc2Instance.json) to your terraform iam user.
+
+> *Note:* even tho the keypair is not active, the permission already gives the permission required to create/delete one and import the public key
+> **Note:** make sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work.
+
+#### others
+
+##### ssm managment
+
+to enable ssm managment for your instances you have to do the following:
+
+1: create a aws-service role for ec2 with the policy: AmazonSSMManagedInstanceCore
+2: on your deployed ec2 instance assosiate the role
+3: stop and start the instance so that the role can take effect
+
+Why do it like this? To minimize risks I do not really want to give terraform the ability to create roles or attach them.
+
+##### keypair for ssh
+
+###### uncomment:
+variable public_key in ./variable.tf and ./terraform.tfvars
+
+input public_key in ./main.tf module ec2instance
+
+variable public_key in ./modules/ec2instance/variable.tf
+
+resource "aws_key_pair" "main" in ./modules/ec2instance/main.tf
+
+attribute key_name  in ./modules/ec2instance/main.tf
+
+###### after do: 
+enter your public key in the variable publi_key in ./terraform.tfvars 
+
+### terraform.tfvars example
+
+```hcl
+# =============================================================================
+# module.ec2instance
+# =============================================================================
+
+# public_key  = "your-public-key"
+instance_type = "t3.micro"
+ami_id        = "ami-08bdb1495db49a7f9"
+```
+
+### inputs
+
+| name | type | description |
+|------|------|-------------|
+| local.common_tags | `map(string)` | has keypears environment and managedby, ist used for tagging | 
+| environment | `string` | variable used for tagging | 
+| vpc_id | `string` | to define in wich vpc the security groups should be made |
+| subnets_public_ids | `list(string)` | possible subnets to launch instances in |
+| subnets_private_ids | `list(string)` | subnet [0] is used to launch an instance |
+| security_group_public_id | `string` | possible to be attached to a instance |
+| security_group_private_id | `string` | attached to the instance in the current module |
+
+### outputs
+
+| name | description |
+|------|-------------|
+| instance_id | instance id for generale use | 

@@ -4,7 +4,7 @@
 
 variable "common_tags" {
   description = "variable for correct tagging and allowing the use of the permissions given"
-  type = map(string)
+  type        = map(string)
 }
 
 variable "environment" {
