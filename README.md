@@ -234,7 +234,7 @@ Why do it like this? To minimize risks I do not really want to give terraform th
 
 ##### <ins>__keypair for ssh__</ins>
 
-###### uncomment:
+###### __uncomment:__
 variable public_key in ./variable.tf and ./terraform.tfvars
 
 input public_key in ./main.tf module ec2instance
@@ -245,7 +245,7 @@ resource "aws_key_pair" "main" in ./modules/ec2instance/main.tf
 
 attribute key_name  in ./modules/ec2instance/main.tf
 
-###### after do: 
+###### __after do:__ 
 enter your public key in the variable publi_key in ./terraform.tfvars 
 
 ### terraform.tfvars example
