@@ -8,6 +8,7 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 |--------|--------|-------------|
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
 | [security groups](#modulessecurity_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
+| [ec2instance](#modulesec2instance) | [./modules/ec2instance/](./modules/ec2instance/) | creates a instance in a private subnet and with a private security group |
 
 
 ### version 
@@ -184,7 +185,7 @@ ssh_allowed_cidrs = []
 
 ## modules/ec2instance
 
-module to create a instance in a private subnet and private security group
+module to create a instance in a private subnet and with a private security group
 
 ### usage
 
