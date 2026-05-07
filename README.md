@@ -222,7 +222,7 @@ To use this module attache this policy [./docs/module_ec2instance/TerraformModul
 
 #### others
 
-##### ssm managment
+##### __ssm managment__
 
 to enable ssm managment for your instances you have to do the following:
 
@@ -232,7 +232,7 @@ to enable ssm managment for your instances you have to do the following:
 
 Why do it like this? To minimize risks I do not really want to give terraform the ability to create roles or attach them.
 
-##### keypair for ssh
+##### __keypair for ssh__
 
 ###### uncomment:
 variable public_key in ./variable.tf and ./terraform.tfvars
