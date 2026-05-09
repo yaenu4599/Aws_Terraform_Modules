@@ -4,7 +4,7 @@
 
 locals {
   environment = var.environment
-  managedby   = var.mangedby
+  managedby   = var.managedby
 
   common_tags = {
     Environment = local.environment
@@ -45,4 +45,12 @@ module "ec2instance" {
   subnets_private_ids       = module.vpc.subnets_private_ids
   security_group_public_id  = module.security_groups.security_group_public_id
   security_group_private_id = module.security_groups.security_group_private_id
+}
+
+module "s3" {
+  source               = "./modules/s3"
+  common_tags          = local.common_tags
+  environment          = var.environment
+  bucket_name          = var.bucket_name
+ 
 }

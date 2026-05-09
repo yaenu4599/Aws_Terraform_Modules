@@ -8,7 +8,7 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "mangedby" {
+variable "managedby" {
   description = "root value for tagging"
   type        = string
   default     = "terraform"
@@ -60,7 +60,7 @@ variable "ssh_allowed_cidrs" {
 
 /*
 variable "public_key" {
-  description = "public key for ssh"
+  description = "public key for ssh( input in tvfars)"
   type = string
 }
 */
@@ -76,3 +76,13 @@ variable "ami_id" {
   type        = string
   default     = "ami-08bdb1495db49a7f9"
 }
+
+# =============================================================================
+# module.s3
+# =============================================================================
+
+variable "bucket_name" {
+  description = "unique name to create the bucket(give name in tvfars)"
+  type        = string
+}
+
