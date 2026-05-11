@@ -36,7 +36,7 @@ resource "aws_internet_gateway" "main" {
 
 resource "aws_eip" "nat" {
   domain = "vpc"
-  count  = length(var.azs)
+  count  = length(var.subnet_private_cidrs)
 
   tags = merge(var.common_tags,
     {
@@ -46,7 +46,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "main" {
-  count             = length(var.azs)
+  count             = length(var.subnet_private_cidrs)
   allocation_id     = aws_eip.nat[count.index].id
   subnet_id         = aws_subnet.public[count.index].id
   connectivity_type = "public"
