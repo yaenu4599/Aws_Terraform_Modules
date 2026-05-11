@@ -25,7 +25,6 @@ Attache this policy [./docs/general/TerraformBasicPermissions.json](./docs/gener
 
 > **Note:** The policy uses `ManagedBy = "terraform"` as a resource tag condition
 > All resources created by this module must include this tag in `common_tags`, or update the condition value in the policy to match your tagging convention
-> 
 
 
 ###  base terraform.tfvars elements
@@ -43,7 +42,9 @@ managedby   = "terraform"
 
 Creates a full vpc setup with public and private subnets across multiple azs. 
 
-For each az defined in var.azs, one public and one private subnet will be created. Each private subnet gets its own nat gateway (deployed in the corresponding public subnet) and an associated route table that routes outbound traffic through it.
+for each az defined in var.azs, one public and one private subnet will be created, up to the number of cidrs provided 
+each private subnet gets its own nat gateway (deployed in the corresponding public subnet) and an associated route table that routes outbound traffic through it 
+if fewer private cidrs than azs are provided, only that many private subnets and nat gateways will be created
 
 
 ### usage

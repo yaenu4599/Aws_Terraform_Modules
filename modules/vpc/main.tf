@@ -36,7 +36,7 @@ resource "aws_internet_gateway" "main" {
 
 resource "aws_eip" "nat" {
   domain = "vpc"
-  count  = length(var.subnet_private_cidrs)
+  count  = min(length(var.subnet_private_cidrs), length(var.azs))
 
   tags = merge(var.common_tags,
     {
@@ -46,7 +46,7 @@ resource "aws_eip" "nat" {
 }
 
 resource "aws_nat_gateway" "main" {
-  count             = length(var.subnet_private_cidrs)
+  count             = min(length(var.subnet_private_cidrs), length(var.azs))
   allocation_id     = aws_eip.nat[count.index].id
   subnet_id         = aws_subnet.public[count.index].id
   connectivity_type = "public"
@@ -69,7 +69,7 @@ resource "aws_nat_gateway" "main" {
 # =============================================================================
 
 resource "aws_subnet" "public" {
-  count             = length(var.subnet_public_cidrs) # the current count is 3 because 3 azs are in the variable. 
+  count             = min(length(var.subnet_public_cidrs), length(var.azs)) # the current count is 3 because 3 azs are in the variable. 
   vpc_id            = aws_vpc.main.id
   availability_zone = var.azs[count.index]
   cidr_block        = var.subnet_public_cidrs[count.index]
@@ -82,7 +82,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "private" {
-  count             = length(var.subnet_private_cidrs) # the current count is 3 because 3 az are in the variable
+  count             = min(length(var.subnet_private_cidrs), length(var.azs)) # the current count is 3 because 3 az are in the variable
   vpc_id            = aws_vpc.main.id
   availability_zone = var.azs[count.index]
   cidr_block        = var.subnet_private_cidrs[count.index]
@@ -115,7 +115,7 @@ resource "aws_route_table" "public" {
 }
 
 resource "aws_route_table" "private" {
-  count  = length(var.subnet_private_cidrs)
+  count  = length(aws_nat_gateway.main)
   vpc_id = aws_vpc.main.id
 
   route {

@@ -48,9 +48,9 @@ module "ec2instance" {
 }
 
 module "s3" {
-  source               = "./modules/s3"
-  common_tags          = local.common_tags
-  environment          = var.environment
-  bucket_name          = var.bucket_name
- 
+  source      = "./modules/s3"
+  common_tags = local.common_tags
+  environment = var.environment
+  bucket_name = var.bucket_name
+
 }
