@@ -9,7 +9,7 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 | [vpc](#modulesvpc) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
 | [security groups](#modulessecurity_groups) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
 | [ec2instance](#modulesec2instance) | [./modules/ec2instance/](./modules/ec2instance/) | creates a instance in a private subnet and with a private security group |
-
+| [s3](#moduless3) | [./modules/s3/](./modules/s3/) | creates a s3 bucket with versioning and encryption enabled |
 
 ### version 
 
@@ -311,7 +311,7 @@ To use this module attache this policy [./docs/module_s3/TerraformModuleS3.json]
 
 So that ec2 instances have access to the bucked add this policy to role and give it to the instance [./docs/module_s3/%20S3AccessPolicy.json](./docs/module_s3/%20S3AccessPolicy.json)
 
-> *Note:* make sure when you change the name of the bucked that you also change the arn in the policy to match
+> *Note:* make sure when you change the name of the bucked that you also change the arn, in the policy, to match
 
 ### terraform.tfvars example
 
@@ -337,4 +337,4 @@ bucket_name          = "my-cool-terraform-bucket-version-3"
 | name | description |
 |------|-------------|
 | bucket_id | for referencing with other resources |
-| bucket_arn | for inputing objects |
+| bucket_arn | for creating and storing objects in the bucket |
