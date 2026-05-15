@@ -186,22 +186,24 @@ ssh_allowed_cidrs = []
 
 ## modules/ec2instance
 
-module to create a instance in a private subnet and with a private security group
+module to create an or multiple ec2 instances in one or more subnets
 
 ### usage
 
+to create an inctance per private subnet use it like this
+to create only a single one, only create a private or public subnet or index it
+
 ```hcl
 module "ec2instance" {
-  source                    = "./modules/ec2instance"
-  common_tags               = local.common_tags
-  environment               = var.environment
-  # public_key              = var.public_key
-  instance_type             = var.instance_type
-  ami_id                    = var.ami_id
-  subnets_public_ids        = module.vpc.subnets_public_ids
-  subnets_private_ids       = module.vpc.subnets_private_ids
-  security_group_public_id  = module.security_groups.security_group_public_id
-  security_group_private_id = module.security_groups.security_group_private_id
+  source      = "./modules/ec2instance"
+  common_tags = local.common_tags
+  environment = var.environment
+  # public_key      = var.public_key
+  instance_type     = var.instance_type
+  ami_id            = var.ami_id
+  subnet_ids        = module.vpc.subnets_private_ids
+  security_group_id = module.security_groups.security_group_private_id
+  associate_public_ip = false
 }
 ```
 
@@ -236,6 +238,7 @@ Why do it like this? To minimize risks I do not really want to give terraform th
 ##### <ins>__keypair for ssh__</ins>
 
 ###### __uncomment:__
+
 variable public_key in ./variable.tf and ./terraform.tfvars
 
 input public_key in ./main.tf module ec2instance
@@ -247,6 +250,7 @@ resource "aws_key_pair" "main" in ./modules/ec2instance/main.tf
 attribute key_name  in ./modules/ec2instance/main.tf
 
 ###### __after do:__ 
+
 enter your public key in the variable publi_key in ./terraform.tfvars 
 
 ### terraform.tfvars example
@@ -268,10 +272,10 @@ ami_id        = "ami-08bdb1495db49a7f9"
 | local.common_tags | `map(string)` | has keypears environment and managedby, ist used for tagging | 
 | environment | `string` | variable used for tagging | 
 | vpc_id | `string` | to define in wich vpc the security groups should be made |
-| subnets_public_ids | `list(string)` | possible subnets to launch instances in |
-| subnets_private_ids | `list(string)` | subnet [0] is used to launch an instance |
-| security_group_public_id | `string` | possible to be attached to a instance |
-| security_group_private_id | `string` | attached to the instance in the current module |
+| subnet_ids | `list(string)` | subnet id or ids to provision the instance |
+| security_group_id | `string` | sg to provision the instance |
+| associate_public_ip | `bool` | should your ec2 instance have an public ip or not |
+
 
 ### outputs
 

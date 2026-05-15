@@ -7,10 +7,11 @@ resource "aws_key_pair" "main" {
 */
 
 resource "aws_instance" "main" {
-  ami                         = var.ami_id
-  instance_type               = var.instance_type
-  vpc_security_group_ids      = [var.security_group_private_id]
-  subnet_id                   = var.subnets_private_ids[0]
+  count                  = length(var.subnet_ids)
+  ami                    = var.ami_id
+  instance_type          = var.instance_type
+  vpc_security_group_ids = [var.security_group_id]
+  subnet_id              = var.subnet_ids[count.index]
   # key_name                    = aws_key_pair.main.key_name
   associate_public_ip_address = false
 

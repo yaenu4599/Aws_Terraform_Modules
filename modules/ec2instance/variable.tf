@@ -33,22 +33,19 @@ variable "ami_id" {
   type        = string
 }
 
-variable "subnets_public_ids" {
+variable "subnet_ids" {
   description = "the ids of the public subnets in the vpc in a list"
   type        = list(string)
 }
 
-variable "subnets_private_ids" {
-  description = "the ids of the private subnets in the vpc in a list"
-  type        = list(string)
-}
 
-variable "security_group_public_id" {
+variable "security_group_id" {
   description = "sg to launche a instance from"
   type        = string
 }
 
-variable "security_group_private_id" {
-  description = "sg to launche a instance from"
-  type        = string
+variable "associate_public_ip" {
+  description = "if the ec2instance should have a public ip or not"
+  type = bool
+  default = false
 }

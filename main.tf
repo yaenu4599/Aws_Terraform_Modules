@@ -38,13 +38,12 @@ module "ec2instance" {
   source      = "./modules/ec2instance"
   common_tags = local.common_tags
   environment = var.environment
-  # public_key              = var.public_key
-  instance_type             = var.instance_type
-  ami_id                    = var.ami_id
-  subnets_public_ids        = module.vpc.subnets_public_ids
-  subnets_private_ids       = module.vpc.subnets_private_ids
-  security_group_public_id  = module.security_groups.security_group_public_id
-  security_group_private_id = module.security_groups.security_group_private_id
+  # public_key      = var.public_key
+  instance_type     = var.instance_type
+  ami_id            = var.ami_id
+  subnet_ids        = module.vpc.subnets_private_ids
+  security_group_id = module.security_groups.security_group_private_id
+  associate_public_ip = false
 }
 
 module "s3" {
