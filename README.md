@@ -6,9 +6,9 @@ Reusable Terraform local modules for AWS infrastructure. Made to be able to add 
 
 |modules | folder | description |
 |--------|--------|-------------|
-| [vpc](./docs/module_vpc/doc.md) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
-| [security groups](./docs/module_security_groups/doc.md) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
-| [ec2instance](./docs/module_ec2instance/doc.md) | [./modules/ec2instance/](./modules/ec2instance/) | creates a instance in a private subnet and with a private security group |
+| [vpc](./docs/networking/module_vpc/doc.md) | [./modules/vpc](./modules/vpc) | vpc, igw, nat, subnets, route tables |
+| [security groups](./docs/security/module_security_groups/doc.md) | [./modules/security_groups](./modules/security_groups) | a public and private security group |
+| [ec2instance](./docs/storage/module_s3/doc.md) | [./modules/ec2instance/](./modules/ec2instance/) | creates a instance in a private subnet and with a private security group |
 | [s3](./docs/module_s3/doc.md) | [./modules/s3/](./modules/s3/) | creates a s3 bucket with versioning and encryption enabled |
 
 ### version 
@@ -37,9 +37,3 @@ Attache this policy [./docs/general/TerraformBasicPermissions.json](./docs/gener
 environment = "dev"
 managedby   = "terraform"
 ```
-
-
-
-
-
-

@@ -30,7 +30,7 @@ none
 
 #### permissions
 
-To use this module attache this policy [./docs/module_vpc/TerraformModuleVpc.json](./docs/module_vpc/TerraformModuleVpc.json) to your terraform iam user.
+To use this module attache this policy [./docs/networking/module_vpc/TerraformModuleVpc.json](/docs/networking/module_vpc/TerraformModuleVpc.json) to your terraform iam user.
 
 > **Note:** make sure that Managedby is eather "terraform" or you change that each permission uses the custom tag defined in Managedby, else it will not work
 
