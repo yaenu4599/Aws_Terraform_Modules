@@ -31,22 +31,11 @@ resource "aws_vpc_security_group_ingress_rule" "public_http" {
 }
 
 
-resource "aws_vpc_security_group_ingress_rule" "public_ssh" {
-  for_each          = var.allow_ssh
-  security_group_id = aws_security_group.public.id
-  cidr_ipv4         = each.value
-  from_port         = 22
-  ip_protocol       = "tcp"
-  to_port           = 22
-}
-
-
 resource "aws_vpc_security_group_egress_rule" "public_outbound_rule" {
   security_group_id = aws_security_group.public.id
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "-1"
 }
-
 
 # =============================================================================
 # private security group
@@ -80,6 +69,15 @@ resource "aws_vpc_security_group_ingress_rule" "private_http" {
   from_port                    = 80
   ip_protocol                  = "tcp"
   to_port                      = 80
+}
+
+resource "aws_vpc_security_group_ingress_rule" "private_ssh" {
+  for_each          = var.allow_ssh
+  security_group_id = aws_security_group.private.id
+  cidr_ipv4         = each.value
+  from_port         = 22
+  ip_protocol       = "tcp"
+  to_port           = 22
 }
 
 resource "aws_vpc_security_group_egress_rule" "private_outbound_rule" {
